@@ -7,6 +7,13 @@ const titulo = document.querySelector('.app__title');
 const botones = document.querySelectorAll('.app__card-button');
 const inputEnfoqueMusica = document.querySelector('#alternar-musica');
 const musica = new Audio('./sonidos/luna-rise-part-one.mp3');
+const botonIniciarPausar = document.querySelector('#start-pause');
+const sonidoBeep = new Audio('./sonidos/beep.mp3');
+const sonidoPlay = new Audio('./sonidos/play.wav');
+const sonidoPause = new Audio('./sonidos/pause.mp3'); 
+
+let tiempoTranscurridoEnSegundos = 5;
+let idIntervalo = null;
 
 musica.loop = true;
 
@@ -62,3 +69,33 @@ function cambiarContexto(contexto){
             break;
     }
 }
+
+const cuentaRegresiva = () => {
+    if(tiempoTranscurridoEnSegundos <= 0){
+        sonidoBeep.play();
+        reiniciar();
+        alert("Tiempo final");
+        return;
+    }
+    tiempoTranscurridoEnSegundos -= 1;
+    console.log("Temporizador" + tiempoTranscurridoEnSegundos);
+}
+
+botonIniciarPausar.addEventListener('click', iniciarPausar);
+
+function iniciarPausar (){
+    if (idIntervalo) {
+        reiniciar();
+        sonidoPause.play();
+        return;
+    }
+    idIntervalo = setInterval(cuentaRegresiva, 1000);
+    sonidoPlay.play();
+}
+
+function reiniciar(){
+    clearInterval(idIntervalo);
+    
+    idIntervalo = null;
+}
+
